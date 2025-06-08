@@ -2,100 +2,97 @@ import { useRef, type RefObject } from "react"
 import { useListBox, type AriaListBoxOptions } from "react-aria"
 import type { ComboBoxState } from "react-stately"
 import { TableRowOption } from "./TableRowOption"
-import type { Table } from "@tanstack/react-table" // ✨ NEW
-
-interface Animal {
-  id: number
-  name: string
-  class: string
-  diet: string
-}
+import type { Table } from "@tanstack/react-table"
+import { flexRender } from "@tanstack/react-table" // Import flexRender here
 
 interface ListBoxProps<T extends object> extends AriaListBoxOptions<T> {
-  listBoxRef: RefObject<HTMLUListElement | null>
+  listBoxRef?: RefObject<HTMLUListElement | null> // Make optional if default is used
   state: ComboBoxState<T>
-  table: Table<Animal> // ✨ NEW: Receive the table instance
+  table: Table<T>
 }
 
 export function TableListBox<T extends object>(props: ListBoxProps<T>) {
-  const ref = useRef<HTMLUListElement | null>(null)
-  const { listBoxRef = ref, state, table } = props // Destructure table
+  const defaultRef = useRef<HTMLUListElement | null>(null)
+  const { listBoxRef = defaultRef, state, table } = props
   const { listBoxProps } = useListBox(props, state, listBoxRef)
 
   return (
-    <div
+    <table
       style={{
-        overflow: "auto", //our scrollable table container
-        position: "relative", //needed for sticky header
+        display: "grid",
+        minWidth: 400, // Keep your minWidth or make it configurable
       }}
     >
-      <table
-        style={{ display: "grid", minWidth: 400, border: "1px solid #ccc" }}
+      <thead
+        onMouseDown={(e) => e.preventDefault()}
+        style={{ display: "flex" }}
       >
-        {/* ✨ NEW: Render a dynamic, interactive header from TanStack Table */}
-        <thead
-          onMouseDown={(e) => e.preventDefault()}
-          style={{
-            display: "grid",
-            position: "sticky",
-            top: 0,
-            zIndex: 1,
-          }}
-        >
-          {table.getHeaderGroups().map((headerGroup) => (
-            <tr
-              key={headerGroup.id}
-              style={{ display: "flex", width: "100%", fontWeight: "bold" }}
-            >
-              {headerGroup.headers.map((header) => (
-                <th
-                  key={header.id}
-                  style={{
-                    flex: `${header.getSize()} 0 auto`,
-                    padding: "8px 12px",
-                    background: "#f0f0f0",
-                    borderBottom: "1px solid #ccc",
-                    cursor: header.column.getCanSort() ? "pointer" : "default",
-                    userSelect: "none",
-                  }}
-                  onClick={header.column.getToggleSortingHandler()}
-                >
-                  {header.isPlaceholder
-                    ? null
-                    : (header.column.columnDef.header as string)}
-                  {/* Add sorting indicators */}
-                  {{
-                    asc: " 🔼",
-                    desc: " 🔽",
-                  }[header.column.getIsSorted() as string] ?? null}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
+        {table.getHeaderGroups().map((headerGroup) => (
+          <tr key={headerGroup.id} style={{ display: "table-row" }}>
+            {headerGroup.headers.map((header) => (
+              <th
+                key={header.id}
+                colSpan={header.colSpan} // Important for TanStack Table
+                style={{
+                  width: header.getSize(), // SET EXPLICIT WIDTH
+                  textAlign: "left", // Optional: better default
+                  padding: "8px 12px", // Optional: for spacing
+                  borderBottom: "1px solid #ccc", // Optional: visual separation
+                  cursor: header.column.getCanSort() ? "pointer" : "default",
+                  userSelect: "none",
+                }}
+                onClick={header.column.getToggleSortingHandler()}
+              >
+                {header.isPlaceholder
+                  ? null
+                  : flexRender(
+                      // Use flexRender for header content too
+                      header.column.columnDef.header,
+                      header.getContext()
+                    )}
+                {/* Add sorting indicators */}
+                {{
+                  asc: " 🔼",
+                  desc: " 🔽",
+                }[header.column.getIsSorted() as string] ?? null}
+              </th>
+            ))}
+          </tr>
+        ))}
+      </thead>
 
-        <tbody
-          {...listBoxProps}
-          ref={listBoxRef}
-          style={{
-            margin: 0,
-            padding: 0,
-            listStyle: "none",
-            maxHeight: 250,
-            overflow: "auto",
-          }}
-        >
-          {/* This part remains the same! It renders the options managed by React Aria */}
-          {[...state.collection].map((item) => (
-            <TableRowOption key={item.key} item={item} state={state} />
-          ))}
-          {state.collection.size === 0 && (
-            <tr style={{ padding: "8px 12px", color: "#888" }}>
+      <tbody
+        {...listBoxProps}
+        ref={listBoxRef}
+        style={{
+          display: "block", // ADD THIS: Makes tbody scroll independently
+          maxHeight: 250, // Your desired scrollable height
+          overflow: "auto",
+        }}
+      >
+        {[...state.collection].map((item) => (
+          <TableRowOption
+            key={item.key}
+            item={item}
+            state={state}
+            table={table}
+          />
+        ))}
+        {state.collection.size === 0 && (
+          <tr style={{ display: "flex" }}>
+            <td
+              colSpan={table.getAllColumns().length} // Span across all columns
+              style={{
+                padding: "8px 12px",
+                color: "#888",
+                textAlign: "center",
+              }}
+            >
               No results found.
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
+            </td>
+          </tr>
+        )}
+      </tbody>
+    </table>
   )
 }

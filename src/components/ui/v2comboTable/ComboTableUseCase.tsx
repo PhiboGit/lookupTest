@@ -46,7 +46,6 @@ export function ComboTableUseCase() {
         <ComboBoxTable
           label="Search Animals"
           onSelectionChange={(key) => {
-            console.log("Selected key:", key?.valueOf())
             setSelectedItem(animals.find((item) => item.id == key))
           }}
           items={animals}

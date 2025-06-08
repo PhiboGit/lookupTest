@@ -1,5 +1,6 @@
+import { useState } from "react"
+import { ComboBoxTable } from "./ComboBoxTable" // We will create this
 import { Item } from "react-stately"
-import { ComboBoxListBox } from "./ComboboxListBox"
 
 type Animal = {
   id: number
@@ -111,20 +112,46 @@ const animals: Animal[] = [
   { id: 100, name: "Moose", class: "Mammal", diet: "Herbivore" },
 ]
 
-export function ComboListUseCase() {
+const cellStyle: React.CSSProperties = {
+  padding: "8px 12px",
+  flex: 1,
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+}
+
+export function ComboTableUseCase() {
+  const [selectedItem, setSelectedItem] = useState<Animal | undefined>(
+    undefined
+  )
   return (
     <div className="flex flex-col gap-2">
-      <h2 className="text-lg font-semibold">Combo List</h2>
+      <h2 className="text-lg font-semibold">Combo Table</h2>
       <p className="text-sm text-gray-500">
-        A ComboBox whose popover is rendered as a ul li.
+        A ComboBox whose popover is rendered as a table with tanstack table and
+        react-aria virtual.Uses div
       </p>
       <div className="border rounded p-4 bg-white shadow-sm">
-        {/* Combo List content will go here */}
-        <ComboBoxListBox label="Favorite Animal">
-          {animals.map((animal) => (
-            <Item key={animal.id}>{animal.name}</Item>
-          ))}
-        </ComboBoxListBox>
+        <ComboBoxTable
+          label="Search Animals"
+          onSelectionChange={(key) => {
+            setSelectedItem(animals.find((item) => item.id == key))
+          }}
+          items={animals}
+        >
+          {(item) => (
+            // textValue is crucial. It tells the ComboBox what value to
+            // use for filtering and for displaying in the input when selected.
+            <Item key={item.id} textValue={item.name}>
+              <td>{item.name}</td>
+              <td>{item.class}</td>
+              <td>{item.diet}</td>
+            </Item>
+          )}
+        </ComboBoxTable>
+        <div className="mt-4">
+          <pre className="text-sm">{JSON.stringify(selectedItem, null, 2)}</pre>
+        </div>
       </div>
     </div>
   )

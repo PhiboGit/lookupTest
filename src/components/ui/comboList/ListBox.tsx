@@ -11,7 +11,6 @@ export function ListBox<T extends object>(props: ListBoxProps<T>) {
   const { listBoxRef = ref, state } = props
   const { listBoxProps } = useListBox(props, state, listBoxRef)
 
-  console.log("ListBox rendered", state.collection.size)
   return (
     <ul
       {...listBoxProps}
