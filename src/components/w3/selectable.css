@@ -1,0 +1,11 @@
+
+.row-focused,
+[data-focused="true"] {
+  outline: 2px solid var(--ring); /* Example focus style */
+  outline-offset: -1px; /* Adjust as needed */
+}
+
+.row-selected,
+[data-selected="true"] { /* Style cells of selected row */
+  background-color: var(--accent); /* Example selection style */
+}

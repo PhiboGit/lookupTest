@@ -1,0 +1,119 @@
+/* styles/globals.css or a dedicated CSS file imported */
+
+.adornment-wrapper {
+  display: flex;
+  align-items: stretch; /* Makes Adornment.Item and Input same effective height */
+  width: 100%;
+  border-radius: var(--radius); /* From Tailwind's rounded-md */
+  border: 1px solid var(--muted); /* From Tailwind's border and border-input */
+  background-color: transparent; /* Or another desired wrapper background */
+  overflow: hidden; /* CRITICAL: This clips children to the wrapper's shape */
+  /* focus-within and disabled states are handled by Tailwind in the component */
+  
+  &:has(*:is(input:disabled)) {
+    opacity: 70%;
+  }
+  &:has(*:is(select:disabled)) {
+    opacity: 70%;
+  }
+  &:has(*:is(button:disabled)) {
+    opacity: 70%;
+  }
+  &:has(*:is(input:disabled)) {
+    cursor: not-allowed;
+  }
+  &:has(*:is(select:disabled)) {
+    cursor: not-allowed;
+  }
+  &:has(*:is(button:disabled)) {
+    cursor: not-allowed;
+  }
+}
+
+/* General styling for all direct children (input, item, select, etc.) */
+.adornment-wrapper > * {
+  /* Remove any individual borders, the wrapper provides the main border */
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  /* Children should not have their own border-radius by default,
+     except for first/last as specified below */
+  border-radius: 0 !important;
+}
+
+/* Specific styling for AdornmentItem */
+.adornment-wrapper > .adornment-item {
+  /* flex, items-center, px-3, bg-muted, text-muted-foreground already from component's className */
+  /* Height is stretched by the parent flex container */
+  /* Ensure it has a background to "show" the radius */
+  /* background-color: hsl(var(--muted)); /* Ensured by bg-muted Tailwind class */
+  display: flex;
+  align-items: center;
+  white-space: nowrap; /* Prevent text wrapping */
+  background-color: var(--muted); /* Ensure the background color is set */
+  color: var(--muted-foreground); /* Ensure text color is set */
+  padding-inline: calc(var(--spacing) * 3)
+}
+
+/* Specific styling for Input, Select, Combobox Trigger inside the wrapper */
+.adornment-wrapper > input,
+.adornment-wrapper > select,
+.adornment-wrapper > button[role="combobox"] {
+  flex-grow: 1;
+  min-width: 0;
+  background-color: transparent !important; /* Make sure input bg doesn't obscure wrapper or item bg */
+  padding-left: 0.75rem;  /* px-3 */
+  padding-right: 0.75rem; /* px-3 */
+  height: 2.5rem;        /* h-10 */
+  font-size: inherit;
+  color: inherit;
+}
+
+/* --- Border Radius Application for specific children --- */
+/* If an AdornmentItem is the first child */
+.adornment-wrapper > .adornment-item:first-child {
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+  /* background-color: yellow; /* For debugging if it's this specific element */
+}
+
+/* If an Input/Select/Button is the first child */
+.adornment-wrapper > input:first-child,
+.adornment-wrapper > select:first-child,
+.adornment-wrapper > button[role="combobox"]:first-child {
+  border-top-left-radius: var(--radius);
+  border-bottom-left-radius: var(--radius);
+  /* background-color: lightblue; /* For debugging */
+}
+
+/* If an AdornmentItem is the last child */
+.adornment-wrapper > .adornment-item:last-child {
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+/* If an Input/Select/Button is the last child */
+.adornment-wrapper > input:last-child,
+.adornment-wrapper > select:last-child,
+.adornment-wrapper > button[role="combobox"]:last-child {
+  border-top-right-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+
+/* --- Separator Border Logic --- */
+/* Any direct child of the wrapper that is NOT the first child gets a left border */
+.adornment-wrapper > :not(:first-child) {
+  border-left: 1px solid hsl(var(--input));
+}
+
+/* Icon styling (same as before) */
+.adornment-item .lucide {
+  width: 1rem;
+  height: 1rem;
+  color: inherit;
+}
+.adornment-item .lucide + span,
+.adornment-item span + .lucide {
+  margin-left: 0.5rem;
+}
