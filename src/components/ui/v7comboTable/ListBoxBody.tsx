@@ -28,7 +28,9 @@ export function ListBoxBody<T extends object>({
       ref={listBoxRef as RefObject<HTMLTableSectionElement>}
       // The `tbody` is now a standard block element within the grid layout.
       style={{
-        display: "block",
+        display: "grid",
+        height: 200,
+        overflow: "auto",
         width: "100%",
       }}
     >

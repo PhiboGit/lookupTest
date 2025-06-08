@@ -15,7 +15,8 @@ interface ListBoxTableProps<T extends object = object>
 }
 
 export function ListBoxTable<T extends object>(props: ListBoxTableProps<T>) {
-  const { listBoxRef, state, table } = props
+  const defaultRef = useRef<HTMLUListElement | null>(null)
+  const { listBoxRef = defaultRef, state, table } = props
 
   const headerRef = useRef<HTMLTableSectionElement | null>(null) // Ref is now on a <thead>
 
@@ -30,18 +31,17 @@ export function ListBoxTable<T extends object>(props: ListBoxTableProps<T>) {
   }, [])
 
   return (
-    // The main scrollable container div.
+    // // The main scrollable container div.
     <div
       style={{
         minWidth: 400,
-        height: 285,
+        height: 300,
         overflow: "auto", // This makes the container scrollable.
-        border: "1px solid #ccc",
         position: "relative", // Needed for the sticky header.
         scrollPaddingTop: headerHeight,
       }}
     >
-      {/* 
+      {/*
         We use `display: grid` on the table to allow the `thead` to remain sticky
         while the `tbody` scrolls underneath it.
       */}
@@ -64,12 +64,8 @@ export function ListBoxTable<T extends object>(props: ListBoxTableProps<T>) {
                 key={header.id}
                 style={{
                   display: "flex",
-                  width: header.getSize(),
-                  textAlign: "left",
                   padding: "8px 12px",
-                  userSelect: "none",
-                  borderBottom: "1px solid #ccc",
-                  boxSizing: "border-box",
+                  width: header.getSize(),
                 }}
                 aria-sort={
                   header.column.getIsSorted() === "asc"
@@ -79,6 +75,9 @@ export function ListBoxTable<T extends object>(props: ListBoxTableProps<T>) {
                     : "none"
                 }
                 onClick={header.column.getToggleSortingHandler()}
+                className={
+                  header.column.getCanSort() ? "cursor-pointer select-none" : ""
+                }
               >
                 {flexRender(
                   header.column.columnDef.header,

@@ -35,7 +35,7 @@ export function ComboTableUseCase() {
   )
   return (
     <div className="flex flex-col gap-2">
-      <h2 className="text-lg font-semibold">Combo Table</h2>
+      <h2 className="text-lg font-semibold">Combo Table v7</h2>
       <p className="text-sm text-gray-500">
         A ComboBox whose popover is rendered as a table with tanstack table.
         Uses semantic HTML table
