@@ -20,7 +20,9 @@ interface ComboBoxTableProps<T extends object = object>
   items: Iterable<T>
   columns: ColumnDef<T>[]
 }
-export function ComboBoxTable<T extends object>(props: ComboBoxTableProps<T>) {
+export function ComboBoxTable<T extends { id: string | number }>(
+  props: ComboBoxTableProps<T>
+) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const { columns, items } = props
@@ -29,6 +31,7 @@ export function ComboBoxTable<T extends object>(props: ComboBoxTableProps<T>) {
   const table = useReactTable({
     data,
     columns,
+    getRowId: (row) => String(row.id),
     state: {
       sorting,
       columnFilters,
@@ -47,8 +50,6 @@ export function ComboBoxTable<T extends object>(props: ComboBoxTableProps<T>) {
   }, [table.getRowModel().rows])
 
   const state = useComboBoxState({
-    ...props,
-    items: processedItems,
     onOpenChange: (isOpen) => {
       // When the combobox is opened, clear the column filters to show all items
       if (isOpen) {
@@ -59,6 +60,8 @@ export function ComboBoxTable<T extends object>(props: ComboBoxTableProps<T>) {
       // When the user types, update the filter for the 'name' column
       setColumnFilters([{ id: "name", value }])
     },
+    ...props,
+    items: processedItems,
   })
 
   const buttonRef = useRef<HTMLButtonElement>(null)
@@ -101,8 +104,7 @@ export function ComboBoxTable<T extends object>(props: ComboBoxTableProps<T>) {
           </span>
         </ComboButton>
       </div>
-      {/* To show an "is empty" Text */}
-      {(state.isOpen || state.collection.size === 0) && (
+      {state.isOpen && (
         <Popover
           state={state}
           triggerRef={inputRef}

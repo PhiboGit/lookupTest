@@ -1,24 +1,24 @@
 // src/components/TableRowOption.tsx
 
-import { flexRender, type Table } from "@tanstack/react-table"
+import { flexRender, type Row } from "@tanstack/react-table"
 import { useRef } from "react"
 import { useOption } from "react-aria"
-import type { ComboBoxState, Node } from "react-stately"
+import type { ComboBoxState } from "react-stately"
 
 interface OptionProps<T extends object> {
-  item: Node<T>
-  index: number // The index of the row in the collection.
+  row: Row<T>
   state: ComboBoxState<T>
-  table: Table<T>
 }
 
 export function TableRowOption<T extends object>({
-  item,
-  index,
+  row,
   state,
-  table,
 }: OptionProps<T>) {
   const ref = useRef<HTMLTableRowElement>(null)
+
+  // Get the item from React Stately's collection
+  // These should be linked with TanStack Table
+  const item = state.collection.getItem(row.id)!
 
   const { optionProps, isSelected, isFocused, isDisabled } = useOption(
     { key: item.key },
@@ -38,25 +38,20 @@ export function TableRowOption<T extends object>({
     backgroundColor = "rgba(0, 0, 0, 0.1)"
   }
 
-  // Find the row from the table model using the index.
-  const row = table.getRowModel().rows[index]
-  if (!row) return null // Safety check
-
   return (
-    // This `<tr>` is now a standard table row.
     <tr
       {...optionProps}
       ref={ref}
       style={{
-        display: "flex", // Layout hack for `<tr>` to respect child `<td>` widths.
+        display: "flex",
         width: "100%",
-        minHeight: "35px", // Ensure a minimum row height.
+        minHeight: "35px",
         background: backgroundColor,
         color: color,
         cursor: isDisabled ? "not-allowed" : "pointer",
         outline: "none",
         boxSizing: "border-box",
-        borderTop: "1px solid #eee", // Optional: adds separation between rows.
+        borderTop: "1px solid #eee",
       }}
     >
       {row.getVisibleCells().map((cell) => (

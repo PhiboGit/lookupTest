@@ -3,6 +3,7 @@
 import type { Table } from "@tanstack/react-table"
 import type { ComboBoxState } from "react-stately"
 import { TableRowOption } from "./TableRowOption"
+import { type Row } from "@tanstack/react-table"
 
 interface ListBoxBodyProps<T extends object> {
   state: ComboBoxState<T>
@@ -13,8 +14,7 @@ export function ListBoxBody<T extends object>({
   state,
   table,
 }: ListBoxBodyProps<T>) {
-  // Convert the collection to an array to map over it.
-  const items = Array.from(state.collection)
+  const { rows } = table.getRowModel()
 
   return (
     <tbody
@@ -23,19 +23,11 @@ export function ListBoxBody<T extends object>({
         width: "100%",
       }}
     >
-      {items.length > 0 ? (
-        items.map((item, index) => (
-          <TableRowOption
-            key={item.key}
-            item={item}
-            // We pass the index to find the corresponding row in the table model.
-            index={index}
-            state={state}
-            table={table}
-          />
+      {rows.length > 0 ? (
+        rows.map((row: Row<T>) => (
+          <TableRowOption key={row.id} row={row} state={state} />
         ))
       ) : (
-        // Render "No results" message directly if there are no items.
         <tr>
           <td
             colSpan={table.getVisibleFlatColumns().length}
