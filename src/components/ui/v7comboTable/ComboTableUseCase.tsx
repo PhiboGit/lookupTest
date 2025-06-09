@@ -5,7 +5,7 @@ import { ComboboxItem } from "./ComboboxItem"
 import type { ColumnDef } from "@tanstack/react-table"
 
 type Animal = {
-  id: number
+  id: string
   name: string
   class: string
   diet: string
@@ -18,11 +18,7 @@ const columns: ColumnDef<Animal>[] = [
     accessorKey: "name",
     header: "Name",
     cell: ({ row }) => {
-      return (
-        <div>
-          <strong>{row.original.id}</strong> {row.original.name}
-        </div>
-      )
+      return <div>{row.original.name}</div>
     },
   },
   { accessorKey: "class", header: "Class" },

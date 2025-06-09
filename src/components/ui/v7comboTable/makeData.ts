@@ -1,6 +1,9 @@
+import { v7 as uuidv7 } from 'uuid';
+
+
 // 1. The data structure type
 type Animal = {
-  id: number
+  id: string
   name: string
   class: string
   diet: string
@@ -41,7 +44,7 @@ export const generateAnimalData = (count: number = 10): Animal[] => {
 
   for (let i = 0; i < count; i++) {
     const animal: Animal = {
-      id: i + 1, // Simple sequential ID
+      id: uuidv7(), // Simple sequential ID
       name: getRandomElement(animalNames),
       class: getRandomElement(animalClasses),
       diet: getRandomElement(animalDiets),
