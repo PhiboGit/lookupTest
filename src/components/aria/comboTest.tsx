@@ -6,6 +6,7 @@ import { ComboTableUseCase as V4ComboTableUseCase } from "../ui/v4comboTable/Com
 import { ComboTableUseCase as V5ComboTableUseCase } from "../ui/v5comboTable/ComboTableUseCase"
 import { ComboTableUseCase as V6ComboTableUseCase } from "../ui/v6comboTable/ComboTableUseCase"
 import { ComboTableUseCase as V7ComboTableUseCase } from "../ui/v7comboTable/ComboTableUseCase"
+import { ComboTableUseCase as V8ComboTableUseCase } from "../ui/v8comboTable/ComboTableUseCase"
 
 export function ComboTest() {
   return (
@@ -18,6 +19,7 @@ export function ComboTest() {
       <V5ComboTableUseCase />
       <V6ComboTableUseCase />
       <V7ComboTableUseCase />
+      <V8ComboTableUseCase />
     </div>
   )
 }
