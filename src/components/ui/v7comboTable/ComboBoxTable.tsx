@@ -118,6 +118,7 @@ export function ComboBoxTable<T extends { id: string | number }>(
             state={state}
             table={table}
           />
+          <div>Footer</div>
         </Popover>
       )}
     </div>
