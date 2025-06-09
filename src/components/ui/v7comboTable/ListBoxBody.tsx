@@ -1,6 +1,5 @@
 // src/components/ListBoxBody.tsx
 
-import React, { type RefObject } from "react"
 import type { Table } from "@tanstack/react-table"
 import type { ComboBoxState } from "react-stately"
 import { TableRowOption } from "./TableRowOption"
@@ -8,29 +7,19 @@ import { TableRowOption } from "./TableRowOption"
 interface ListBoxBodyProps<T extends object> {
   state: ComboBoxState<T>
   table: Table<T>
-  listBoxRef: RefObject<HTMLElement | null>
-  listBoxProps: React.HTMLAttributes<HTMLElement>
 }
 
 export function ListBoxBody<T extends object>({
   state,
   table,
-  listBoxRef,
-  listBoxProps,
 }: ListBoxBodyProps<T>) {
   // Convert the collection to an array to map over it.
   const items = Array.from(state.collection)
 
   return (
     <tbody
-      {...listBoxProps}
-      // The cast is fine, as this is only used to scroll
-      ref={listBoxRef as RefObject<HTMLTableSectionElement>}
-      // The `tbody` is now a standard block element within the grid layout.
       style={{
         display: "grid",
-        height: 200,
-        overflow: "auto",
         width: "100%",
       }}
     >

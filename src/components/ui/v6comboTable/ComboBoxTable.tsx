@@ -15,34 +15,17 @@ import {
 } from "@tanstack/react-table"
 import { Input } from "../input" // Assuming you have a custom Input component
 
-// ... Animal interface and columns definition remain the same ...
-interface Animal {
-  id: number
-  name: string
-  class: string
-  diet: string
+interface ComboBoxTableProps<T extends object = object>
+  extends ComboBoxStateOptions<T> {
+  items: Iterable<T>
+  columns: ColumnDef<T>[]
 }
-const columns: ColumnDef<Animal>[] = [
-  {
-    accessorKey: "name",
-    header: "Name",
-    cell: ({ row }) => {
-      return (
-        <div>
-          <strong>{row.original.id}</strong> {row.original.name}
-        </div>
-      )
-    },
-  },
-  { accessorKey: "class", header: "Class" },
-  { accessorKey: "diet", header: "Diet" },
-]
-
-export function ComboBoxTable(props: ComboBoxStateOptions<Animal>) {
+export function ComboBoxTable<T extends object>(props: ComboBoxTableProps<T>) {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const { columns, items } = props
 
-  const data = useMemo(() => Array.from(props.items || []), [props.items])
+  const data = useMemo(() => Array.from(items || []), [items])
 
   const table = useReactTable({
     data,
@@ -116,7 +99,6 @@ export function ComboBoxTable(props: ComboBoxStateOptions<Animal>) {
           </span>
         </ComboButton>
       </div>
-      {/* To show an "is empty" Text */}
       {state.isOpen && (
         <Popover
           state={state}

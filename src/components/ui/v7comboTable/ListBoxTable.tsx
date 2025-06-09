@@ -9,17 +9,18 @@ import { ListBoxBody } from "./ListBoxBody"
 
 interface ListBoxTableProps<T extends object = object>
   extends AriaListBoxOptions<T> {
-  listBoxRef: RefObject<HTMLElement | null>
+  listBoxRef: RefObject<HTMLDivElement | null>
   state: ComboBoxState<T>
   table: Table<T>
 }
 
 export function ListBoxTable<T extends object>(props: ListBoxTableProps<T>) {
-  const defaultRef = useRef<HTMLUListElement | null>(null)
+  const defaultRef = useRef<HTMLDivElement | null>(null)
   const { listBoxRef = defaultRef, state, table } = props
 
   const headerRef = useRef<HTMLTableSectionElement | null>(null) // Ref is now on a <thead>
 
+  // the listbox props and ref have to be with the scrollable container
   const { listBoxProps } = useListBox(props, state, listBoxRef)
 
   const [headerHeight, setHeaderHeight] = useState(0)
@@ -33,6 +34,8 @@ export function ListBoxTable<T extends object>(props: ListBoxTableProps<T>) {
   return (
     // // The main scrollable container div.
     <div
+      {...listBoxProps}
+      ref={listBoxRef}
       style={{
         minWidth: 400,
         height: 300,
@@ -93,12 +96,7 @@ export function ListBoxTable<T extends object>(props: ListBoxTableProps<T>) {
         {/*
           The ListBoxBody component now renders all items directly.
         */}
-        <ListBoxBody
-          state={state}
-          table={table}
-          listBoxRef={listBoxRef}
-          listBoxProps={listBoxProps}
-        />
+        <ListBoxBody state={state} table={table} />
       </table>
     </div>
   )

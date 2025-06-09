@@ -3,6 +3,7 @@ import { ComboBoxTable } from "./ComboBoxTable" // We will create this
 import { Item } from "react-stately"
 import { TableCell } from "../table"
 import { generateAnimalData } from "./makeData"
+import type { ColumnDef } from "@tanstack/react-table"
 
 type Animal = {
   id: number
@@ -12,6 +13,22 @@ type Animal = {
 }
 // Define a more complex data structure for our table
 const animals: Animal[] = generateAnimalData(1000)
+
+const columns: ColumnDef<Animal>[] = [
+  {
+    accessorKey: "name",
+    header: "Name",
+    cell: ({ row }) => {
+      return (
+        <div>
+          <strong>{row.original.id}</strong> {row.original.name}
+        </div>
+      )
+    },
+  },
+  { accessorKey: "class", header: "Class" },
+  { accessorKey: "diet", header: "Diet" },
+]
 
 export function ComboTableUseCase() {
   const [selectedItem, setSelectedItem] = useState<Animal | undefined>(
@@ -31,6 +48,7 @@ export function ComboTableUseCase() {
             setSelectedItem(animals.find((item) => item.id == key))
           }}
           items={animals}
+          columns={columns}
         >
           {(item) => (
             // textValue is crucial. It tells the ComboBox what value to

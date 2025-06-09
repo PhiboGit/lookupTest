@@ -1,7 +1,13 @@
 // src/components/TableListBox.tsx
 
 // FIX: Import useState and useLayoutEffect
-import React, { useState, useLayoutEffect, useRef, type RefObject } from "react"
+import React, {
+  useState,
+  useLayoutEffect,
+  useRef,
+  type RefObject,
+  useEffect,
+} from "react"
 import { useListBox, type AriaListBoxOptions } from "react-aria"
 import { useVirtualizerState } from "@react-stately/virtualizer"
 import { useScrollView } from "@react-aria/virtualizer"

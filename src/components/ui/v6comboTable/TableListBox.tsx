@@ -1,12 +1,6 @@
 // src/components/TableListBox.tsx
 
-import React, {
-  useRef,
-  useMemo,
-  type RefObject,
-  useState,
-  useLayoutEffect,
-} from "react"
+import { useRef, type RefObject, useState, useLayoutEffect } from "react"
 import { useListBox, type AriaListBoxOptions } from "react-aria"
 import type { ComboBoxState } from "react-stately"
 import type { Table } from "@tanstack/react-table"
@@ -14,7 +8,7 @@ import { flexRender } from "@tanstack/react-table"
 import { ListBoxBody } from "./ListBoxBody"
 
 interface ListBoxProps<T extends object> extends AriaListBoxOptions<T> {
-  listBoxRef: RefObject<HTMLTableSectionElement | null>
+  listBoxRef: RefObject<HTMLDivElement | null>
   state: ComboBoxState<T>
   table: Table<T>
 }
@@ -22,16 +16,11 @@ interface ListBoxProps<T extends object> extends AriaListBoxOptions<T> {
 export function TableListBox<T extends object>(props: ListBoxProps<T>) {
   const { listBoxRef, state, table } = props
 
-  // This ref is for the main scrollable element.
-  const scrollRef = useRef<HTMLDivElement | null>(null)
-  const headerRef = useRef<HTMLTableSectionElement | null>(null) // Ref is now on a <thead>
+  // headerRef to calculate scroll padding
+  const headerRef = useRef<HTMLTableSectionElement | null>(null)
 
-  // useListBox still manages the ARIA interactions for the listbox container (<tbody>).
-  // We'll pass its props down to the ListBoxBody component.
+  // the listbox props and ref have to be with the scrollable container
   const { listBoxProps } = useListBox(props, state, listBoxRef)
-
-  // Memoize the array of items from the collection for the virtualizer.
-  const items = useMemo(() => Array.from(state.collection), [state.collection])
 
   const [headerHeight, setHeaderHeight] = useState(0)
 
@@ -44,10 +33,11 @@ export function TableListBox<T extends object>(props: ListBoxProps<T>) {
   return (
     // The main scrollable container div.
     <div
-      ref={scrollRef}
+      {...listBoxProps}
+      ref={listBoxRef}
       style={{
         minWidth: 400,
-        height: 285,
+        height: 285, // This makes the container scrollable.
         overflow: "auto", // This makes the container scrollable.
         border: "1px solid #ccc",
         position: "relative", // Needed for the sticky header.
@@ -108,14 +98,7 @@ export function TableListBox<T extends object>(props: ListBoxProps<T>) {
           The ListBoxBody component contains the useVirtualizer hook
           and renders the virtualized rows.
         */}
-        <ListBoxBody
-          state={state}
-          table={table}
-          items={items}
-          scrollRef={scrollRef}
-          listBoxRef={listBoxRef}
-          listBoxProps={listBoxProps}
-        />
+        <ListBoxBody state={state} table={table} listBoxRef={listBoxRef} />
       </table>
     </div>
   )

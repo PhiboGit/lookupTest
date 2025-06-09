@@ -8,7 +8,7 @@ type Animal = {
 
 // 2. Data pools for realistic random generation
 const animalNames: string[] = [
-  "Lion", "Elephant", "Giraffe", "Zebra", "Penguin", "Snake", 
+  "Lion", "Big Yellow Elephant With Stripes", "Giraffe", "Zebra", "Penguin", "Snake", 
   "Crocodile", "Eagle", "Shark", "Clownfish", "Frog", "Spider",
   "Tiger", "Bear", "Wolf", "Hippo", "Gorilla", "Parrot"
 ];

@@ -117,6 +117,7 @@ export function ComboBoxTable(props: ComboBoxStateOptions<Animal>) {
         >
           <TableListBox
             {...listBoxProps}
+            isVirtualized
             listBoxRef={listBoxRef}
             state={state}
             table={table}

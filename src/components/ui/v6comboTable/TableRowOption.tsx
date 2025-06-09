@@ -1,7 +1,7 @@
 // src/components/TableRowOption.tsx
 
 import { flexRender, type Table } from "@tanstack/react-table"
-import React, { useRef } from "react"
+import { useRef } from "react"
 import { useOption } from "react-aria"
 import type { VirtualItem } from "@tanstack/react-virtual"
 import type { ComboBoxState, Node } from "react-stately"
@@ -40,19 +40,16 @@ export function TableRowOption<T extends object>({
   }
 
   const row = table.getRowModel().rows[virtualRow.index]
-  if (!row) return null // Safety check
 
   return (
     // This `<tr>` is absolutely positioned within the `<tbody>`.
     <tr
       {...optionProps}
       ref={ref}
+      data-index={virtualRow.index}
       style={{
         position: "absolute",
-        top: 0,
-        left: 0,
         width: "100%",
-        height: `${virtualRow.size}px`,
         // `transform` is used for efficient repositioning on scroll.
         transform: `translateY(${virtualRow.start}px)`,
         display: "flex", // Layout hack for `<tr>` to respect child `<td>` widths.
@@ -67,8 +64,6 @@ export function TableRowOption<T extends object>({
         <td
           key={cell.id}
           style={{
-            display: "flex",
-            alignItems: "center",
             width: cell.column.getSize(),
             padding: "8px 12px",
             boxSizing: "border-box",
