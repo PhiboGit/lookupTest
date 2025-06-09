@@ -22,6 +22,7 @@
     "@react-aria/utils": "^3.28.2",
     "@react-aria/visually-hidden": "^3.8.22",
     "@tailwindcss/vite": "^4.1.6",
+    "@tanstack/match-sorter-utils": "^8.19.4",
     "@tanstack/react-table": "^8.21.3",
     "@tanstack/react-virtual": "^3.13.8",
     "class-variance-authority": "^0.7.1",
